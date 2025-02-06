@@ -1,3 +1,7 @@
+let appleImg;
+function preload(){
+  appleImg = loadImage('apple.png')
+}
 class Apple {
   constructor(x, y, size, speed, acceleration) {
     this.x = x;
@@ -13,7 +17,7 @@ class Apple {
   }
   
   display() {
-    circle(this.x, this.y, this.size);
+    image(appleImg,this.x,this.y,this.size,this.size)
   }
 }
 
@@ -22,7 +26,7 @@ let apple;
 function setup() {
   createCanvas(800, 800);
   
-  apple = new Apple(100, 100, 20, 0, 0.1);
+  apple = new Apple(100, 100, 30, 0, 0.1);
 }
 
 function draw() {
