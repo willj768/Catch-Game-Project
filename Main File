@@ -17,6 +17,14 @@ class Apple {
     this.y += this.speed;
     this.speed += this.acceleration;
   }
+
+  checkAppleY(ground) {
+      if(ground <= this.y) {
+        return true;
+      } else {
+        return false;
+      }
+    }
   
   display() {
     image(appleImg,this.x,this.y,this.size,this.size)
@@ -63,6 +71,13 @@ function draw() {
   apple.move();
   basket.display();
   basket.move();
+
+  if(apple.checkAppleY(ground)) {
+      apple.y = 0;
+      apple.x = random(0, 800);
+      apple.speed = 0;
+      lives --;
+    }
   
   if(lives == 0) {
     gameEnded = true;
