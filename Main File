@@ -43,10 +43,14 @@ class Basket {
 
 let apple;
 let basket;
+let lives = 5;
+let gameEnded = false;
+
 function setup() {
   createCanvas(800, 800);
   basket = new Basket(100,750,30)
   apple = new Apple(random(0,800), 0, 30, 0, 0.05);
+  
 }
 
 function draw() {
@@ -55,5 +59,15 @@ function draw() {
   apple.move();
   basket.display();
   basket.move();
-}
+  
+  if(lives == 0) {
+    gameEnded = true;
+  }
+  
+  if(gameEnded) {
+    fill(255);
+    textSize(50);
+    textAlign(CENTER, CENTER);
+    text("Game Over. Click to restart", 400, 400);
+  }
 
