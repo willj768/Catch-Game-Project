@@ -81,33 +81,47 @@ function draw() {
   else if (basket.x>750)
     basket.x = 749
   
-  apple.display();
-  apple.move();
-  basket.display();
-  basket.move();
-  fill(255);
-  textSize(50);
-  text(`Lives: ${lives}`, 10, 50);
-  text("Score: " + score, 500, 50);
-  
-  if(apple.checkCollision()) {
-    apple.y = 0;
-    apple.x = random(20, 780);
-    apple.speed = 0;
-    score ++;
-  } 
-  
-  if(apple.checkAppleY(ground)) {
+  if(!gameEnded) {
+    apple.display();
+    apple.move();
+    basket.display();
+    basket.move();
+    fill(255);
+    textSize(50);
+    text(`Lives: ${lives}`, 10, 50);
+    text("Score: " + score, 500, 50);
+
+    if(apple.checkCollision()) {
       apple.y = 0;
       apple.x = random(20, 780);
       apple.speed = 0;
-      lives --;
+      score ++;
+    } 
+
+    if(apple.checkAppleY(ground)) {
+        apple.y = 0;
+        apple.x = random(20, 780);
+        apple.speed = 0;
+        lives --;
+      }
+
+    if(lives == 0) {
+      gameEnded = true;
     }
-  
-  if(lives < 1) {
+    
+  } else {
     fill(255);
-    textSize(50);
-    text("Game Over. Click to restart", 100, 400);
+  textSize(50);
+  text("Game Over. Press 'R' to restart", 100, 400); 
   }
+  
+}
+
+function keyPressed() {
+  if (gameEnded && (key === 'R' || key === 'r')) {
+    gameEnded = false;
+    lives = 5;
+    score = 0;
   }
+}
 
