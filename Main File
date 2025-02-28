@@ -1,13 +1,13 @@
+let song;
 let appleImg;
 let basketImg;
 let circleX = 0
 let diameter = 90
 let bombImg;
-
 function preload(){
-  appleImg = loadImage('images/apple.png')
-  basketImg = loadImage('images/basket.png')
-  bombImg = loadImage('images/bomb.png')
+  appleImg = loadImage('apple.png')
+  basketImg = loadImage('basket.png')
+  bombImg = loadImage('bomb.png')
 }
 class Apple {
   constructor(x, y, size, speed, acceleration) {
@@ -31,7 +31,7 @@ class Apple {
       }
     }
   
-  checkAppleCollision() {
+  checkCollision() {
     
     let appleBottom = this.y + apple.size;
     let basketTop = basket.y;
@@ -56,9 +56,9 @@ class Basket {
   }
   move(){
   if (keyIsDown(LEFT_ARROW)) {
-    this.x -= 10;
+    this.x -= 5;
   }else if (keyIsDown(RIGHT_ARROW)) {
-    this.x += 10;
+    this.x += 5;
 }}
   display(){
     image(basketImg,this.x,this.y,this.size,this.size)
@@ -74,13 +74,13 @@ class Bomb extends Apple {
     this.speed += this.acceleration;
   }
   
-  checkBombY(ground) {
-    if(ground <= this.y) {
+    checkBombY(ground) {
+      if(ground <= this.y) {
         return true;
-    } else {
-      return false;
+      } else {
+        return false;
+      }
     }
-  }
   
   checkBombCollision() {
     
@@ -103,16 +103,19 @@ class Bomb extends Apple {
 
 let apple;
 let basket;
+let missed = 0;
 let lives = 5;
+let bombLives = 3;
 let score = 0;
 let ground = 800
 let gameEnded = false;
 
 function setup() {
+  song = loadSound('8-bit-retro-game-music-233964.mp3')
   createCanvas(800, 800);
   basket = new Basket(100,750,50)
-  apple = new Apple(random(20,780), -30, 30, 0, 0.15);
-  bomb = new Bomb(random(20,780), -80, 30, 0, 0.18);
+  apple = new Apple(random(20,780), 0, 30, 0, 0.09);
+  bomb = new Bomb(random(20,780), -30, 30, 0, 0.1);
 }
 
 function draw() { 
@@ -139,55 +142,55 @@ function draw() {
     apple.move();
     basket.display();
     basket.move();
-    bomb.display();
-    bomb.move();
     fill(255);
-    textSize(50);
+    textSize(20);
     text(`Lives: ${lives}`, 10, 50);
-    text("Score: " + score, 500, 50);
+    text("Score: " + score, 700, 50);
+    text("Missed: " + missed, 700, 100);
+    text("Bomb Catches Left: " + bombLives, 600, 150);
 
-    if(apple.checkAppleCollision()) {
-      apple.y = -30;
+    if(apple.checkCollision()) {
+      apple.y = 0;
       apple.x = random(20, 780);
       apple.speed = 0;
       score ++;
     } 
+    if(score > 9 )
+      bomb.move()
+      bomb.display()
 
     if(apple.checkAppleY(ground)) {
-        apple.y = -30;
+        apple.y = 0;
         apple.x = random(20, 780);
         apple.speed = 0;
         lives --;
+        missed++
       }
     if(bomb.checkBombCollision()) {
-      bomb.y = -80;
+      bomb.y = 0;
       bomb.x = random(20, 780);
       bomb.speed = 0;
-      lives--;
+       bombLives--;
     } 
-    
-    if(bomb.checkBombY(ground)) {
-      bomb.y = -80;
-      bomb.x = random(20, 780);
-      bomb.speed = 0;
-    }
-    
-    if(lives == 0) {
+    if(lives == 0 || bombLives == 0) {
       gameEnded = true;
     }
     
   } else {
     fill(255);
-  textSize(50);
-  text("Game Over. Press 'R' to restart", 50, 400); 
+  textSize(20);
+  text("Game Over! Your score was "+score+". Press 'R' to restart", 100, 400); 
   }
   
 }
-
+function mousePressed(){
+  song.play()
+}
 function keyPressed() {
   if (gameEnded && (key === 'R' || key === 'r')) {
     gameEnded = false;
     lives = 5;
     score = 0;
+    bombLives = 3;
   }
 }
