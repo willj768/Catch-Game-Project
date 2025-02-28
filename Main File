@@ -95,6 +95,7 @@ class Bomb extends Apple {
   
   display() {
     image(bombImg,this.x,this.y,this.size,this.size)
+    
   }
   
 }
@@ -110,7 +111,7 @@ function setup() {
   createCanvas(800, 800);
   basket = new Basket(100,750,50)
   apple = new Apple(random(20,780), 0, 30, 0, 0.05);
-  bomb = new Bomb(random(20,780), 0, 30, 0, 0.1);
+  bomb = new Bomb(random(20,780), -30, 30, 0, 0.1);
 }
 
 function draw() { 
@@ -148,6 +149,9 @@ function draw() {
       apple.speed = 0;
       score ++;
     } 
+    if(score > 5 && score%2==0)
+      bomb.move()
+      bomb.display()
 
     if(apple.checkAppleY(ground)) {
         apple.y = 0;
@@ -155,7 +159,12 @@ function draw() {
         apple.speed = 0;
         lives --;
       }
-
+    if(bomb.checkCollision()) {
+      bomb.y = 0;
+      bomb.x = random(20, 780);
+      bomb.speed = 0;
+      lives--;
+    } 
     if(lives == 0) {
       gameEnded = true;
     }
