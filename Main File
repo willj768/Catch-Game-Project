@@ -1,9 +1,13 @@
 let appleImg;
 let basketImg;
+let bombImg;
+
 function preload(){
   appleImg = loadImage('apple.png')
   basketImg = loadImage('basket.png')
+  bombImg = loadImage('bomb.png')
 }
+
 class Apple {
   constructor(x, y, size, speed, acceleration) {
     this.x = x;
@@ -26,7 +30,7 @@ class Apple {
       }
     }
   
-  checkCollision() {
+  checkAppleCollision() {
     
     let appleBottom = this.y + apple.size;
     let basketTop = basket.y;
@@ -51,14 +55,51 @@ class Basket {
   }
   move(){
   if (keyIsDown(LEFT_ARROW)) {
-    this.x -= 5;
+    this.x -= 8;
   }else if (keyIsDown(RIGHT_ARROW)) {
-    this.x += 5;
-}}
+    this.x += 8;
+  }
+}
+  
   display(){
     image(basketImg,this.x,this.y,this.size,this.size)
   }  
 
+}
+
+class Bomb extends Apple {
+  constructor(x, y, size, speed, acceleration) {
+    super(x, y, size, speed, acceleration);
+  }
+  move() {
+    this.y += this.speed;
+    this.speed += this.acceleration;
+  }
+  
+    checkBombY(ground) {
+      if(ground <= this.y) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  
+  checkBombCollision() {
+    
+    let bombBottom = this.y + bomb.size;
+    let basketTop = basket.y;
+    let basketLeft = basket.x;
+    let basketRight = basket.x + basket.size;
+    
+    if (bombBottom >= basketTop && bomb.x + bomb.size > basketLeft && bomb.x < basketRight) {
+      return true;
+    }
+  }
+  
+  display() {
+    image(bombImg,this.x,this.y,this.size,this.size)
+  }
+  
 }
 
 let apple;
@@ -71,7 +112,8 @@ let gameEnded = false;
 function setup() {
   createCanvas(800, 800);
   basket = new Basket(100,750,50)
-  apple = new Apple(random(20,780), 0, 30, 0, 0.05);
+  apple = new Apple(random(20,780), 0, 30, 0, 0.1);
+  bomb = new Bomb(random(20,780), 0, 30, 0, 0.1);
 }
 
 function draw() {
@@ -91,7 +133,7 @@ function draw() {
     text(`Lives: ${lives}`, 10, 50);
     text("Score: " + score, 500, 50);
 
-    if(apple.checkCollision()) {
+    if(apple.checkAppleCollision()) {
       apple.y = 0;
       apple.x = random(20, 780);
       apple.speed = 0;
@@ -104,6 +146,14 @@ function draw() {
         apple.speed = 0;
         lives --;
       }
+    
+    if(score >= 10 && score % 5 == 0) {
+      bomb.display();
+      bomb.move();
+      bomb.y = 0;
+      bomb.x = random(20, 780);
+      bomb.speed = 0;
+    }
 
     if(lives == 0) {
       gameEnded = true;
