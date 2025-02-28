@@ -5,9 +5,9 @@ let diameter = 90
 let bombImg;
 
 function preload(){
-  appleImg = loadImage('apple.png')
-  basketImg = loadImage('basket.png')
-  bombImg = loadImage('bomb.png')
+  appleImg = loadImage('images/apple.png')
+  basketImg = loadImage('images/basket.png')
+  bombImg = loadImage('images/bomb.png')
 }
 class Apple {
   constructor(x, y, size, speed, acceleration) {
@@ -56,9 +56,9 @@ class Basket {
   }
   move(){
   if (keyIsDown(LEFT_ARROW)) {
-    this.x -= 8;
+    this.x -= 10;
   }else if (keyIsDown(RIGHT_ARROW)) {
-    this.x += 8;
+    this.x += 10;
 }}
   display(){
     image(basketImg,this.x,this.y,this.size,this.size)
@@ -160,14 +160,14 @@ function draw() {
         lives --;
       }
     if(bomb.checkBombCollision()) {
-      bomb.y = -30;
+      bomb.y = -80;
       bomb.x = random(20, 780);
       bomb.speed = 0;
       lives--;
     } 
     
     if(bomb.checkBombY(ground)) {
-      bomb.y = -30;
+      bomb.y = -80;
       bomb.x = random(20, 780);
       bomb.speed = 0;
     }
@@ -179,7 +179,7 @@ function draw() {
   } else {
     fill(255);
   textSize(50);
-  text("Game Over. Press 'R' to restart", 100, 400); 
+  text("Game Over. Press 'R' to restart", 50, 400); 
   }
   
 }
@@ -191,4 +191,3 @@ function keyPressed() {
     score = 0;
   }
 }
-
