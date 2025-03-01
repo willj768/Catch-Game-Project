@@ -1,3 +1,4 @@
+let song;
 let appleImg;
 let basketImg;
 let bombImg;
@@ -109,6 +110,7 @@ let bombLives = 3;
 let score = 0;
 let ground = 800
 let gameEnded = false;
+let gameStarted = false;
 
 function setup() {
   song = loadSound('8-bit-retro-game-music-233964.mp3')
@@ -137,7 +139,7 @@ function draw() {
   else if (basket.x > 750)
     basket.x = 749
   
-  if(!gameEnded) {
+  if(gameEnded == false && gameStarted == true) {
     apple.display();
     apple.move();
     basket.display();
@@ -183,14 +185,18 @@ function draw() {
       bomb.speed = 0;
     }
     
-    if(lives == 0) {
+    if(lives == 0 || bombLives == 0) {
       gameEnded = true;
     }
     
-  } else {
+  } else if(gameEnded == true && gameStarted == true) {
     fill(255);
     textSize(20);
-    text("Game Over! Your score was "+score+". Press 'R' to restart", 100, 400); 
+    text("Game Over! Your score was "+score+". Press 'R' to restart", 200, 400); 
+  } else if(gameEnded == false && gameStarted == false) {
+    fill(255);
+    textSize(20);
+    text("Use the arrow keys to catch the apples and avoid the bombs. Press 'S' to start", 50, 400);
   }
   
 }
@@ -202,8 +208,16 @@ function mousePressed(){
 function keyPressed() {
   if (gameEnded && (key === 'R' || key === 'r')) {
     gameEnded = false;
+    gameStarted = false;
     lives = 5;
     score = 0;
     bombLives = 3;
+    missed = 0;  // Reset missed counter
+    apple = new Apple(random(20, 780), 0, 30, 0, 0.09);
+    bomb = new Bomb(random(20, 780), -30, 30, 0, 0.1);
+  }
+
+  if (!gameStarted && (key === 'S' || key === 's')) {
+    gameStarted = true;
   }
 }
